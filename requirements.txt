@@ -1,0 +1,10 @@
+flask
+tensorflow
+numpy
+pillow
+sqlalchemy
+flask_sqlalchemy
+requests
+reportlab
+matplotlib
+gunicorn

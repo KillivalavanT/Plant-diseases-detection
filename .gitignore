@@ -1,0 +1,16 @@
+venv/
+__pycache__/
+*.pyc
+instance/
+logs/
+*.h5
+*.hdf5
+*.ckpt
+models/*
+leaf_mobilenetv2_best.h5
+leaf_model.h5
+leaf_mobilenetv2_saved_from_weights/
+uploads/
+.vscode/
+.DS_Store
+*.log

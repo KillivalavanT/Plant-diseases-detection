@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Dashboard</h1>
+        <a class="btn btn-outline-secondary" href="/">Back</a>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="card shadow-sm p-3">
+            <h6 class="text-muted">Total Predictions</h6>
+            <div id="totals" class="display-6 fw-bold">—</div>
+            <hr>
+            <h6 class="text-muted">Class Distribution</h6>
+            <canvas id="classChart" width="300" height="200"></canvas>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="card shadow-sm p-3">
+            <h6 class="text-muted">Recent Predictions</h6>
+            <div id="recent" class="list-group list-group-flush mt-2">Loading…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function loadStats(){
+        const r = await fetch('/api/stats');
+        const j = await r.json();
+        document.getElementById('totals').innerText = j.total || 0;
+
+        const labels = Object.keys(j.class_counts || {});
+        const data = labels.map(l => j.class_counts[l] || 0);
+        const ctx = document.getElementById('classChart').getContext('2d');
+        new Chart(ctx, { type:'bar', data:{ labels, datasets:[{ data, backgroundColor: ['#4e79a7','#f28e2b','#e15759','#76b7b2'] }] }, options:{ responsive:true, plugins:{ legend:{ display:false } } } });
+
+        const recentEl = document.getElementById('recent');
+        recentEl.innerHTML = '';
+        (j.recent || []).forEach(item => {
+          const a = document.createElement('div');
+          a.className = 'list-group-item d-flex gap-3 py-3';
+          a.innerHTML = `
+            <img src="/static/uploads/${item.filename}" width="84" height="56" style="object-fit:cover;border-radius:6px" onerror="this.onerror=null;this.src='${'"' + '{{ url_for('static', filename='img/placeholder.svg') }}' + '"'}'"> 
+            <div class="d-flex flex-column">
+              <div class="d-flex justify-content-between">
+                <strong>${item.predicted_class}</strong>
+                <small class="text-muted">${(item.confidence*100).toFixed(1)}%</small>
+              </div>
+              <div class="text-muted small">${Object.entries(item.probs).map(([k,v])=> `${k}: ${(v*100).toFixed(1)}%`).join(' · ')}</div>
+              <div class="mt-2"><a href="/download_report/${item.id}" class="btn btn-sm btn-outline-primary">PDF</a></div>
+            </div>`;
+          recentEl.appendChild(a);
+        });
+      }
+      loadStats();
+    </script>
+  </body>
+</html>

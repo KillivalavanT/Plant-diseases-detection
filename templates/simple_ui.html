@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simple.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>🌿 Plant Disease Detection System</h1>
+    <p>Upload a leaf image to identify plant disease</p>
+</header>
+
+<main>
+    <div class="card">
+
+        <input type="file" id="imageInput" accept="image/*">
+
+        <div class="image-box">
+            <img id="preview" alt="Image Preview">
+        </div>
+
+        <button id="predictBtn">Predict Disease</button>
+
+        <div class="loader" id="loader"></div>
+
+        <div class="result">
+            <h2 id="prediction"></h2>
+            <p id="confidence"></p>
+            <div id="heatmapWrap" style="margin-top:12px; display:none;">
+                <h5>Heatmap</h5>
+                <img id="heatmapImg" src="" alt="heatmap" style="max-width:100%; border-radius:8px; border:1px solid #e7e7e7;">
+                <div style="margin-top:8px;">
+                    <a id="reportLink" class="btn btn-sm" href="#" style="background:#2e7d32;color:#fff;text-decoration:none;padding:6px 10px;border-radius:6px;">Download PDF Report</a>
+                    <a id="downloadOriginal" class="btn btn-sm" href="#" style="margin-left:8px;color:#333;text-decoration:none;padding:6px 10px;border-radius:6px;border:1px solid #ddd;">Download Original</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 Plant Disease Detection | ML Project</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/simple.js') }}"></script>
+</body>
+</html>
